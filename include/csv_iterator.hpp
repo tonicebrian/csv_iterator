@@ -9,8 +9,10 @@ namespace csv {
     class iterator {
         typedef std::vector<std::string>::iterator strIt;
         public:
-            Tuple getTuple(std::vector<std::string>::iterator it){
-                return Tuple();
+            /**
+             * Constructor denoting end of range
+             */
+            iterator() {
             }
 
             Tuple operator*() {

@@ -9,7 +9,6 @@
 
 class csv_iteratorTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(csv_iteratorTest);
-    CPPUNIT_TEST(testSimpleInts);
     CPPUNIT_TEST(testDereference);
     CPPUNIT_TEST_SUITE_END();
 
@@ -21,15 +20,6 @@ class csv_iteratorTest : public CppUnit::TestFixture {
     }
 
     void tearDown(){
-    }
-
-    void testSimpleInts(){
-        std::vector<std::string> values;
-        csv::iterator<record> it;
-        record obtained = it.getTuple(values.begin());
-        record expected;
-
-        CPPUNIT_ASSERT_EQUAL(expected, obtained);
     }
 
     void testDereference(){
