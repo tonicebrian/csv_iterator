@@ -8,11 +8,16 @@ namespace csv {
     template<class Tuple>
     class iterator {
         typedef std::vector<std::string>::iterator strIt;
+        bool m_bad;
+
         public:
             /**
              * Constructor denoting end of range
              */
-            iterator() {
+            iterator() : m_bad(true) {
+            }
+
+            iterator(strIt it) : m_bad(false){
             }
 
             Tuple operator*() {
@@ -20,7 +25,11 @@ namespace csv {
             }
 
             bool operator==(const iterator& other) {
-                return true;
+                return m_bad == other.m_bad;
+            }
+
+            bool operator!=(const iterator& other) {
+                return !(*this == other);
             }
     };
 };
