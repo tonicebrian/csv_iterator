@@ -12,6 +12,10 @@ namespace csv {
             Tuple getTuple(std::vector<std::string>::iterator it){
                 return Tuple();
             }
+
+            Tuple operator*() {
+                return Tuple();
+            }
     };
 };
 #endif
