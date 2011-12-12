@@ -18,6 +18,10 @@ namespace csv {
             Tuple operator*() {
                 return Tuple();
             }
+
+            bool operator==(const iterator& other) {
+                return true;
+            }
     };
 };
 #endif
