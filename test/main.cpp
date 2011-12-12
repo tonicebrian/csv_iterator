@@ -25,10 +25,10 @@ int main(int argc, char* argv[]) {
     runner.run(controller);
     
     // Write results into XML
-    ofstream xmlFileOut("cpptestresults.xml");
-    XmlOutputter xmlOut(&result, xmlFileOut);
-    xmlOut.write();
-    xmlFileOut.close();
+    // ofstream xmlFileOut("cpptestresults.xml");
+    // XmlOutputter xmlOut(&result, xmlFileOut);
+    // xmlOut.write();
+    // xmlFileOut.close();
 
     // And to the console
     TextOutputter textOutput(&result, std::cout);

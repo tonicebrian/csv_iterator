@@ -12,6 +12,7 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 # Testing
 find_package(CppUnit REQUIRED)
 add_executable(UnitTester test/main.cpp
+                    test/csv_iteratorTest.cpp
               )
 
 target_link_libraries(UnitTester ${CPPUNIT_LIBRARIES})
