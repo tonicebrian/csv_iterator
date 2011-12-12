@@ -12,6 +12,7 @@ class csv_iteratorTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testDereference);
     CPPUNIT_TEST(testCheckEqualityOfEmpties);
     CPPUNIT_TEST(testCheckEqualityOfDifferentIterators);
+    CPPUNIT_TEST(testCheckEqualityInitializedIterators);
     CPPUNIT_TEST_SUITE_END();
 
     typedef boost::tuple<int,int> record;
@@ -38,6 +39,14 @@ class csv_iteratorTest : public CppUnit::TestFixture {
     void testCheckEqualityOfDifferentIterators() {
         std::vector<std::string> values;
         csv::iterator<record> it, it2(values.begin());
+        CPPUNIT_ASSERT(it != it2);
+    }
+
+    void testCheckEqualityInitializedIterators() {
+        std::vector<std::string> values;
+        csv::iterator<record> it(values.begin()), it2(values.begin());
+
+        // No iterator equals the other
         CPPUNIT_ASSERT(it != it2);
     }
 };

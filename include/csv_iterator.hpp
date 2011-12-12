@@ -25,7 +25,7 @@ namespace csv {
             }
 
             bool operator==(const iterator& other) {
-                return m_bad == other.m_bad;
+                return (m_bad == true) &&  (other.m_bad == true);
             }
 
             bool operator!=(const iterator& other) {
