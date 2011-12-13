@@ -16,6 +16,7 @@ class csv_iteratorTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testIteratorFeedWithValues);
     CPPUNIT_TEST(testIteratorFeedWithDoubles);
     CPPUNIT_TEST(testFillTuple);
+    CPPUNIT_TEST(testFillTupleWithMixedRecords);
     CPPUNIT_TEST_SUITE_END();
 
     typedef boost::tuple<int,int> TwoIntRecord;
@@ -81,15 +82,26 @@ class csv_iteratorTest : public CppUnit::TestFixture {
     }
 
     void testFillTuple() {
-       ThreeIntRecord expected, obtained;
-       std::vector<std::string> values = {"1","2","3"};
+        ThreeIntRecord expected, obtained;
+        std::vector<std::string> values = {"1","2","3"};
 
-       csv::details::helper<ThreeIntRecord,2>::fill(obtained, values.begin());
+        csv::details::helper<ThreeIntRecord,2>::fill(obtained, values.begin());
 
-       boost::tuples::get<0>(expected) = 1;
-       boost::tuples::get<1>(expected) = 2;
-       boost::tuples::get<2>(expected) = 3;
-       CPPUNIT_ASSERT_EQUAL(expected,obtained);
+        boost::tuples::get<0>(expected) = 1;
+        boost::tuples::get<1>(expected) = 2;
+        boost::tuples::get<2>(expected) = 3;
+        CPPUNIT_ASSERT_EQUAL(expected,obtained);
+    }
+
+    void testFillTupleWithMixedRecords(){
+        ThreeMixedRecord expected, obtained;
+        std::vector<std::string> values = {"1","hola","2.4"};
+        csv::details::helper<ThreeMixedRecord,2>::fill(obtained, values.begin());
+
+        boost::tuples::get<0>(expected) = 1;
+        boost::tuples::get<1>(expected) = "hola";
+        boost::tuples::get<2>(expected) = 2.4;
+        CPPUNIT_ASSERT_EQUAL(expected,obtained);
     }
 };
 
