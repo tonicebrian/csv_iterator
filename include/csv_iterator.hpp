@@ -3,12 +3,15 @@
 
 #include <string>
 #include <vector>
+#include <boost/tuple/tuple.hpp>
 
 namespace csv {
     template<class Tuple>
     class iterator {
         typedef std::vector<std::string>::iterator strIt;
         bool m_bad;
+
+        strIt m_it, m_itEnd;
 
         public:
             /**
@@ -17,11 +20,20 @@ namespace csv {
             iterator() : m_bad(true) {
             }
 
-            iterator(strIt it) : m_bad(false){
+            iterator(strIt beg, strIt end) 
+                : m_bad(false), m_it(beg), m_itEnd(end)
+            {
             }
 
             Tuple operator*() {
-                return Tuple();
+                Tuple result;
+                while(m_it != m_itEnd){
+                    boost::tuples::get<0>(result) = 1;
+                    ++m_it;
+                    boost::tuples::get<1>(result) = 2;
+                    ++m_it;
+                }
+                return result;
             }
 
             bool operator==(const iterator& other) {
@@ -30,6 +42,9 @@ namespace csv {
 
             bool operator!=(const iterator& other) {
                 return !(*this == other);
+            }
+
+            void operator++(int x = 0) {
             }
     };
 };
