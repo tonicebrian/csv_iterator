@@ -20,7 +20,10 @@ class csv_iteratorTest : public CppUnit::TestFixture {
 
     typedef boost::tuple<int,int> TwoIntRecord;
     typedef boost::tuple<int,int,int> ThreeIntRecord;
+
     typedef boost::tuple<double,double> TwoDoubleRecord;
+
+    typedef boost::tuple<int,std::string,double> ThreeMixedRecord;
 
     public:
 
@@ -79,12 +82,13 @@ class csv_iteratorTest : public CppUnit::TestFixture {
 
     void testFillTuple() {
        ThreeIntRecord expected, obtained;
+       std::vector<std::string> values = {"1","2","3"};
 
-       csv::details::helper<ThreeIntRecord,2>::fill(obtained);
+       csv::details::helper<ThreeIntRecord,2>::fill(obtained, values.begin());
 
-       boost::tuples::get<0>(expected) = 0;
-       boost::tuples::get<1>(expected) = 1;
-       boost::tuples::get<2>(expected) = 2;
+       boost::tuples::get<0>(expected) = 1;
+       boost::tuples::get<1>(expected) = 2;
+       boost::tuples::get<2>(expected) = 3;
        CPPUNIT_ASSERT_EQUAL(expected,obtained);
     }
 };

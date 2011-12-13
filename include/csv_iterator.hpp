@@ -7,28 +7,36 @@
 #include <boost/lexical_cast.hpp>
 
 namespace csv {
+    // String iterator
+    typedef std::vector<std::string>::iterator strIt;
+
     namespace details {
         // This namespace is private and subject to change
         // Do not use
         template<class Tuple, int N >
             struct helper {
-                static void fill(Tuple& tuple){
-                    boost::tuples::get<N>(tuple) = N;
-                    helper<Tuple,N-1>::fill(tuple);
+                static void fill(Tuple& tuple, strIt it){
+                    using namespace boost::tuples;
+                    typedef typename element<length<Tuple>::value-N-1,Tuple>::type value_type;
+                    get<length<Tuple>::value-N-1>(tuple) = boost::lexical_cast<value_type>(*it);
+                    ++it;
+                    helper<Tuple,N-1>::fill(tuple,it);
                 }
             };
 
         template<class Tuple>
             struct helper<Tuple, 0> {
-                static void fill(Tuple& tuple){
-                    boost::tuples::get<0>(tuple) = 0;
+                static void fill(Tuple& tuple, strIt it){
+                    using namespace boost::tuples;
+                    typedef typename boost::tuples::element<length<Tuple>::value-1,Tuple>::type value_type;
+                    boost::tuples::get<length<Tuple>::value-1>(tuple) = boost::lexical_cast<value_type>(*it);
+                    ++it;
                 };
             };
     }
 
     template<class Tuple>
         class iterator {
-            typedef std::vector<std::string>::iterator strIt;
             bool m_bad;
 
             strIt m_it, m_itEnd;
