@@ -16,7 +16,8 @@ class csv_iteratorTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testIteratorFeedWithValues);
     CPPUNIT_TEST_SUITE_END();
 
-    typedef boost::tuple<int,int> record;
+    typedef boost::tuple<int,int> TwoIntRecord;
+    typedef boost::tuple<int,int,int> ThreeIntRecord;
 
     public:
 
@@ -27,25 +28,25 @@ class csv_iteratorTest : public CppUnit::TestFixture {
     }
 
     void testDereference(){
-        csv::iterator<record> it;
-        record expected;
+        csv::iterator<TwoIntRecord> it;
+        TwoIntRecord expected;
         CPPUNIT_ASSERT_EQUAL(expected, *it);
     }
 
     void testCheckEqualityOfEmpties(){
-        csv::iterator<record> it, it2;
+        csv::iterator<TwoIntRecord> it, it2;
         CPPUNIT_ASSERT(it == it2);
     }
 
     void testCheckEqualityOfDifferentIterators() {
         std::vector<std::string> values;
-        csv::iterator<record> it, it2(values.begin(), values.end());
+        csv::iterator<TwoIntRecord> it, it2(values.begin(), values.end());
         CPPUNIT_ASSERT(it != it2);
     }
 
     void testCheckEqualityInitializedIterators() {
         std::vector<std::string> values;
-        csv::iterator<record> it(values.begin(),values.end()), it2(values.begin(),values.end());
+        csv::iterator<TwoIntRecord> it(values.begin(),values.end()), it2(values.begin(),values.end());
 
         // No iterator equals the other
         CPPUNIT_ASSERT(it != it2);
@@ -53,9 +54,9 @@ class csv_iteratorTest : public CppUnit::TestFixture {
 
     void testIteratorFeedWithValues(){
         std::vector<std::string> values = {"1","2"};
-        csv::iterator<record> it(values.begin(), values.end());
+        csv::iterator<TwoIntRecord> it(values.begin(), values.end());
 
-        record expected;
+        TwoIntRecord expected;
         boost::tuples::get<0>(expected) = 1;
         boost::tuples::get<1>(expected) = 2;
 

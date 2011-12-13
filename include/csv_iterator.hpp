@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <boost/tuple/tuple.hpp>
+#include <boost/lexical_cast.hpp>
 
 namespace csv {
     template<class Tuple>
@@ -28,9 +29,9 @@ namespace csv {
             Tuple operator*() {
                 Tuple result;
                 while(m_it != m_itEnd){
-                    boost::tuples::get<0>(result) = 1;
+                    boost::tuples::get<0>(result) = boost::lexical_cast<int>(*m_it);
                     ++m_it;
-                    boost::tuples::get<1>(result) = 2;
+                    boost::tuples::get<1>(result) = boost::lexical_cast<int>(*m_it);
                     ++m_it;
                 }
                 return result;
