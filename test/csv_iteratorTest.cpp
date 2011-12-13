@@ -14,10 +14,11 @@ class csv_iteratorTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testCheckEqualityOfDifferentIterators);
     CPPUNIT_TEST(testCheckEqualityInitializedIterators);
     CPPUNIT_TEST(testIteratorFeedWithValues);
+    CPPUNIT_TEST(testIteratorFeedWithDoubles);
     CPPUNIT_TEST_SUITE_END();
 
     typedef boost::tuple<int,int> TwoIntRecord;
-    typedef boost::tuple<int,int,int> ThreeIntRecord;
+    typedef boost::tuple<double,double> TwoDoubleRecord;
 
     public:
 
@@ -59,6 +60,17 @@ class csv_iteratorTest : public CppUnit::TestFixture {
         TwoIntRecord expected;
         boost::tuples::get<0>(expected) = 1;
         boost::tuples::get<1>(expected) = 2;
+
+        CPPUNIT_ASSERT_EQUAL(expected,*it);
+    }
+
+    void testIteratorFeedWithDoubles(){
+        std::vector<std::string> values = {"1.4","2.5"};
+        csv::iterator<TwoDoubleRecord> it(values.begin(), values.end());
+
+        TwoDoubleRecord expected;
+        boost::tuples::get<0>(expected) = 1.4;
+        boost::tuples::get<1>(expected) = 2.5;
 
         CPPUNIT_ASSERT_EQUAL(expected,*it);
     }
