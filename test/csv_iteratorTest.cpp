@@ -80,7 +80,7 @@ class csv_iteratorTest : public CppUnit::TestFixture {
     void testFillTuple() {
        ThreeIntRecord expected, obtained;
 
-       csv::helper<ThreeIntRecord,2>::fill(obtained);
+       csv::details::helper<ThreeIntRecord,2>::fill(obtained);
 
        boost::tuples::get<0>(expected) = 0;
        boost::tuples::get<1>(expected) = 1;

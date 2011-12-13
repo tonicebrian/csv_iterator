@@ -7,20 +7,24 @@
 #include <boost/lexical_cast.hpp>
 
 namespace csv {
-    template<class Tuple, int N >
-        struct helper {
-            static void fill(Tuple& tuple){
-                boost::tuples::get<N>(tuple) = N;
-                helper<Tuple,N-1>::fill(tuple);
-            }
-        };
-
-    template<class Tuple>
-        struct helper<Tuple, 0> {
-            static void fill(Tuple& tuple){
-                boost::tuples::get<0>(tuple) = 0;
+    namespace details {
+        // This namespace is private and subject to change
+        // Do not use
+        template<class Tuple, int N >
+            struct helper {
+                static void fill(Tuple& tuple){
+                    boost::tuples::get<N>(tuple) = N;
+                    helper<Tuple,N-1>::fill(tuple);
+                }
             };
-        };
+
+        template<class Tuple>
+            struct helper<Tuple, 0> {
+                static void fill(Tuple& tuple){
+                    boost::tuples::get<0>(tuple) = 0;
+                };
+            };
+    }
 
     template<class Tuple>
         class iterator {
