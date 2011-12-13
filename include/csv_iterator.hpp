@@ -7,14 +7,32 @@
 #include <boost/lexical_cast.hpp>
 
 namespace csv {
+    template<class Tuple, int N >
+        struct helper {
+            static void fill(Tuple& tuple){
+                boost::tuples::get<N>(tuple) = N;
+                helper<Tuple,N-1>::fill(tuple);
+            }
+        };
+
     template<class Tuple>
-    class iterator {
-        typedef std::vector<std::string>::iterator strIt;
-        bool m_bad;
+        struct helper<Tuple, 0> {
+            static void fill(Tuple& tuple){
+                boost::tuples::get<0>(tuple) = 0;
+            };
+        };
 
-        strIt m_it, m_itEnd;
+    template<class Tuple>
+        class iterator {
+            typedef std::vector<std::string>::iterator strIt;
+            bool m_bad;
 
-        public:
+            strIt m_it, m_itEnd;
+
+            /**
+             * Metaprogramming function for filling the tuple
+             */
+            public:
             /**
              * Constructor denoting end of range
              */
@@ -29,12 +47,12 @@ namespace csv {
             Tuple operator*() {
                 Tuple result;
                 try {
-                while(m_it != m_itEnd){
-                    boost::tuples::get<0>(result) = boost::lexical_cast<typename boost::tuples::element<0,Tuple>::type >(*m_it);
-                    ++m_it;
-                    boost::tuples::get<1>(result) = boost::lexical_cast<typename boost::tuples::element<1,Tuple>::type >(*m_it);
-                    ++m_it;
-                }
+                    while(m_it != m_itEnd){
+                        boost::tuples::get<0>(result) = boost::lexical_cast<typename boost::tuples::element<0,Tuple>::type >(*m_it);
+                        ++m_it;
+                        boost::tuples::get<1>(result) = boost::lexical_cast<typename boost::tuples::element<1,Tuple>::type >(*m_it);
+                        ++m_it;
+                    }
                 } catch (boost::bad_lexical_cast& ex){
                     std::cout << ex.what() << std::endl;
                     m_bad = true;
@@ -52,6 +70,8 @@ namespace csv {
 
             void operator++(int x = 0) {
             }
-    };
+        };
 };
+
+
 #endif
