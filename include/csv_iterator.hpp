@@ -15,23 +15,34 @@ namespace csv {
         // Do not use
         template<class Tuple, int N >
             struct helper {
-                static void fill(Tuple& tuple, strIt it){
+                static void fill(Tuple& tuple, strIt it, strIt end){
                     using namespace boost::tuples;
                     typedef typename element<length<Tuple>::value-N-1,Tuple>::type value_type;
                     get<length<Tuple>::value-N-1>(tuple) = boost::lexical_cast<value_type>(*it);
                     ++it;
-                    helper<Tuple,N-1>::fill(tuple,it);
+                    if(it != end){
+                        helper<Tuple,N-1>::fill(tuple,it,end);
+                    }
                 }
             };
 
         template<class Tuple>
             struct helper<Tuple, 0> {
-                static void fill(Tuple& tuple, strIt it){
+                static void fill(Tuple& tuple, strIt it, strIt end){
                     using namespace boost::tuples;
                     typedef typename boost::tuples::element<length<Tuple>::value-1,Tuple>::type value_type;
                     boost::tuples::get<length<Tuple>::value-1>(tuple) = boost::lexical_cast<value_type>(*it);
                     ++it;
                 };
+            };
+
+        template<class Tuple>
+            struct filler {
+                static void fill(Tuple& tuple, strIt it,strIt end){
+                    if(it != end){
+                        helper<Tuple, boost::tuples::length<Tuple>::value-1>::fill(tuple,it,end);
+                    }
+                }
             };
     }
 
@@ -59,12 +70,7 @@ namespace csv {
             Tuple operator*() {
                 Tuple result;
                 try {
-                    while(m_it != m_itEnd){
-                        boost::tuples::get<0>(result) = boost::lexical_cast<typename boost::tuples::element<0,Tuple>::type >(*m_it);
-                        ++m_it;
-                        boost::tuples::get<1>(result) = boost::lexical_cast<typename boost::tuples::element<1,Tuple>::type >(*m_it);
-                        ++m_it;
-                    }
+                    details::filler<Tuple>::fill(result,m_it,m_itEnd);
                 } catch (boost::bad_lexical_cast& ex){
                     std::cout << ex.what() << std::endl;
                     m_bad = true;

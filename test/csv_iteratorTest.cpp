@@ -85,7 +85,7 @@ class csv_iteratorTest : public CppUnit::TestFixture {
         ThreeIntRecord expected, obtained;
         std::vector<std::string> values = {"1","2","3"};
 
-        csv::details::helper<ThreeIntRecord,2>::fill(obtained, values.begin());
+        csv::details::helper<ThreeIntRecord,2>::fill(obtained, values.begin(), values.end());
 
         boost::tuples::get<0>(expected) = 1;
         boost::tuples::get<1>(expected) = 2;
@@ -96,11 +96,15 @@ class csv_iteratorTest : public CppUnit::TestFixture {
     void testFillTupleWithMixedRecords(){
         ThreeMixedRecord expected, obtained;
         std::vector<std::string> values = {"1","hola","2.4"};
-        csv::details::helper<ThreeMixedRecord,2>::fill(obtained, values.begin());
+        csv::details::helper<ThreeMixedRecord,2>::fill(obtained, values.begin(), values.end());
 
         boost::tuples::get<0>(expected) = 1;
         boost::tuples::get<1>(expected) = "hola";
         boost::tuples::get<2>(expected) = 2.4;
+        CPPUNIT_ASSERT_EQUAL(expected,obtained);
+
+        // Test the function that hides the manipulation of the number of elements
+        csv::details::filler<ThreeMixedRecord>::fill(obtained, values.begin(), values.end());
         CPPUNIT_ASSERT_EQUAL(expected,obtained);
     }
 };
