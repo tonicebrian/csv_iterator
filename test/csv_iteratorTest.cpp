@@ -17,6 +17,7 @@ class csv_iteratorTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testIteratorFeedWithDoubles);
     CPPUNIT_TEST(testFillTuple);
     CPPUNIT_TEST(testFillTupleWithMixedRecords);
+    CPPUNIT_TEST(testReadIstream);
     CPPUNIT_TEST_SUITE_END();
 
     typedef boost::tuple<int,int> TwoIntRecord;
@@ -25,6 +26,7 @@ class csv_iteratorTest : public CppUnit::TestFixture {
     typedef boost::tuple<double,double> TwoDoubleRecord;
 
     typedef boost::tuple<int,std::string,double> ThreeMixedRecord;
+    typedef boost::tokenizer<boost::escaped_list_separator<char> > Tokens;
 
     public:
 
@@ -46,22 +48,23 @@ class csv_iteratorTest : public CppUnit::TestFixture {
     }
 
     void testCheckEqualityOfDifferentIterators() {
-        std::vector<std::string> values;
-        csv::iterator<TwoIntRecord> it, it2(values.begin(), values.end());
+        std::stringstream ss;
+        csv::iterator<TwoIntRecord> it, it2(ss);
         CPPUNIT_ASSERT(it != it2);
     }
 
     void testCheckEqualityInitializedIterators() {
         std::vector<std::string> values;
-        csv::iterator<TwoIntRecord> it(values.begin(),values.end()), it2(values.begin(),values.end());
+        std::stringstream ss1, ss2;
+        csv::iterator<TwoIntRecord> it(ss1), it2(ss2);
 
         // No iterator equals the other
         CPPUNIT_ASSERT(it != it2);
     }
 
     void testIteratorFeedWithValues(){
-        std::vector<std::string> values = {"1","2"};
-        csv::iterator<TwoIntRecord> it(values.begin(), values.end());
+        std::stringstream ss("1,2");
+        csv::iterator<TwoIntRecord> it(ss);
 
         TwoIntRecord expected;
         boost::tuples::get<0>(expected) = 1;
@@ -71,8 +74,8 @@ class csv_iteratorTest : public CppUnit::TestFixture {
     }
 
     void testIteratorFeedWithDoubles(){
-        std::vector<std::string> values = {"1.4","2.5"};
-        csv::iterator<TwoDoubleRecord> it(values.begin(), values.end());
+        std::stringstream ss("1.4,2.5");
+        csv::iterator<TwoDoubleRecord> it(ss);
 
         TwoDoubleRecord expected;
         boost::tuples::get<0>(expected) = 1.4;
@@ -83,9 +86,10 @@ class csv_iteratorTest : public CppUnit::TestFixture {
 
     void testFillTuple() {
         ThreeIntRecord expected, obtained;
-        std::vector<std::string> values = {"1","2","3"};
+        std::string line = "1,2,3";
+        Tokens tokens(line);
 
-        csv::details::helper<ThreeIntRecord,2>::fill(obtained, values.begin(), values.end());
+        csv::details::helper<ThreeIntRecord,2>::fill(obtained, tokens.begin(), tokens.end());
 
         boost::tuples::get<0>(expected) = 1;
         boost::tuples::get<1>(expected) = 2;
@@ -95,8 +99,9 @@ class csv_iteratorTest : public CppUnit::TestFixture {
 
     void testFillTupleWithMixedRecords(){
         ThreeMixedRecord expected, obtained;
-        std::vector<std::string> values = {"1","hola","2.4"};
-        csv::details::helper<ThreeMixedRecord,2>::fill(obtained, values.begin(), values.end());
+        std::string line = "1,hola,2.4";
+        Tokens tokens(line);
+        csv::details::helper<ThreeMixedRecord,2>::fill(obtained, tokens.begin(), tokens.end());
 
         boost::tuples::get<0>(expected) = 1;
         boost::tuples::get<1>(expected) = "hola";
@@ -104,8 +109,19 @@ class csv_iteratorTest : public CppUnit::TestFixture {
         CPPUNIT_ASSERT_EQUAL(expected,obtained);
 
         // Test the function that hides the manipulation of the number of elements
-        csv::details::filler<ThreeMixedRecord>::fill(obtained, values.begin(), values.end());
+        csv::details::filler<ThreeMixedRecord>::fill(obtained, tokens.begin(), tokens.end());
         CPPUNIT_ASSERT_EQUAL(expected,obtained);
+    }
+
+    void testReadIstream(){
+        std::stringstream ss("1,hola,2.4");
+        csv::iterator<ThreeMixedRecord> it(ss);
+
+        ThreeMixedRecord expected;
+        boost::tuples::get<0>(expected) = 1;
+        boost::tuples::get<1>(expected) = "hola";
+        boost::tuples::get<2>(expected) = 2.4;
+        CPPUNIT_ASSERT_EQUAL(expected,*it);
     }
 };
 

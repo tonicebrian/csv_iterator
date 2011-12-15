@@ -4,9 +4,10 @@
 #include <vector>
 #include <string>
 #include <boost/tuple/tuple.hpp>
+#include <boost/tokenizer.hpp>
 namespace csv {
     // String iterator
-    typedef std::vector<std::string>::iterator strIt;
+    typedef boost::tokenizer<boost::escaped_list_separator<char> >::iterator strIt;
 
 
     namespace details {
