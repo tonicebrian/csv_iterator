@@ -15,6 +15,7 @@ namespace csv {
                 bool m_bad;
                 std::istream* m_in;
                 std::string currentLine;
+                Tuple currentResult; // Useful for passing pointers around
             public:
                 /**
                  * Constructor denoting end of range
@@ -25,21 +26,24 @@ namespace csv {
                 iterator(std::istream& in)
                     : m_bad(false), m_in(&in) 
                 {
-                    this->operator++(0);
+                    this->operator++();
+                }
+
+                Tuple const* operator->(){
+                    return &currentResult;
                 }
 
                 Tuple operator*() {
-                    Tuple result;
                     try {
                         using namespace boost;
                         typedef tokenizer<escaped_list_separator<char> > Tokens;
                         Tokens tokens(currentLine);
-                        details::filler<Tuple>::fill(result,tokens.begin(),tokens.end());
+                        details::filler<Tuple>::fill(currentResult,tokens.begin(),tokens.end());
                     } catch (boost::bad_lexical_cast& ex){
                         std::cout << ex.what() << std::endl;
                         m_bad = true;
                     }
-                    return result;
+                    return currentResult;
                 }
 
                 bool operator==(const iterator& other) {
@@ -50,12 +54,14 @@ namespace csv {
                     return !(*this == other);
                 }
 
-                void operator++(int x = 0) {
+                
+                iterator& operator++() {
                     if(m_in->good()){
                         std::getline(*m_in, currentLine);
                     } else {
                         m_bad = true;
                     }
+                    return *this;
                 }
         };
 };
