@@ -18,6 +18,7 @@ class csv_iteratorTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testFillTuple);
     CPPUNIT_TEST(testFillTupleWithMixedRecords);
     CPPUNIT_TEST(testReadIstream);
+    CPPUNIT_TEST(testReadFile);
     CPPUNIT_TEST_SUITE_END();
 
     typedef boost::tuple<int,int> TwoIntRecord;
@@ -121,6 +122,20 @@ class csv_iteratorTest : public CppUnit::TestFixture {
         boost::tuples::get<0>(expected) = 1;
         boost::tuples::get<1>(expected) = "hola";
         boost::tuples::get<2>(expected) = 2.4;
+        CPPUNIT_ASSERT_EQUAL(expected,*it);
+    }
+
+    void testReadFile(){
+        std::ifstream in("test/resources/simple.csv");
+        csv::iterator<ThreeMixedRecord> it(in);
+
+        //Ignore first line
+        it++;
+
+        ThreeMixedRecord expected;
+        boost::tuples::get<0>(expected) = 2;
+        boost::tuples::get<1>(expected) = "adios";
+        boost::tuples::get<2>(expected) = 5.8;
         CPPUNIT_ASSERT_EQUAL(expected,*it);
     }
 };
