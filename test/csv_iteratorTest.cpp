@@ -50,14 +50,14 @@ class csv_iteratorTest : public CppUnit::TestFixture {
     }
 
     void testCheckEqualityOfDifferentIterators() {
-        std::stringstream ss;
+        std::stringstream ss("1,2");
         csv::iterator<TwoIntRecord> it, it2(ss);
         CPPUNIT_ASSERT(it != it2);
     }
 
     void testCheckEqualityInitializedIterators() {
         std::vector<std::string> values;
-        std::stringstream ss1, ss2;
+        std::stringstream ss1("1,2"), ss2("1,2");
         csv::iterator<TwoIntRecord> it(ss1), it2(ss2);
 
         // No iterator equals the other
@@ -153,6 +153,15 @@ class csv_iteratorTest : public CppUnit::TestFixture {
                              });
 
         CPPUNIT_ASSERT_EQUAL(2.4,obtained->get<2>());
+
+        double acc = 0.0;
+        std::ifstream in2("test/resources/simple.csv");
+        csv::iterator<ThreeMixedRecord> it2(in2);
+        std::for_each(it2,csv::iterator<ThreeMixedRecord>(),
+                      [&acc](const ThreeMixedRecord& a) {
+                        acc += a.get<2>(); 
+                      });
+        CPPUNIT_ASSERT_EQUAL(8.2,acc);
     }
 };
 

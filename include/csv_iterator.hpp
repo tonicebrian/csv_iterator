@@ -56,11 +56,8 @@ namespace csv {
 
                 
                 iterator& operator++() {
-                    if(m_in->good()){
-                        std::getline(*m_in, currentLine);
-                    } else {
-                        m_bad = true;
-                    }
+                    bool res = std::getline(*m_in, currentLine);
+                    m_bad = !res;
                     return *this;
                 }
         };
