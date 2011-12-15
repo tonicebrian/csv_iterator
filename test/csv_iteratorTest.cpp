@@ -20,6 +20,7 @@ class csv_iteratorTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testReadFile);
     CPPUNIT_TEST(testAlgorithms);
     CPPUNIT_TEST(testThrowException);
+    CPPUNIT_TEST(testThrowParseException);
     CPPUNIT_TEST_SUITE_END();
 
     typedef boost::tuple<int,int> TwoIntRecord;
@@ -170,6 +171,13 @@ class csv_iteratorTest : public CppUnit::TestFixture {
         ++it;
 
         CPPUNIT_ASSERT_THROW( *it, std::out_of_range );
+    }
+
+    void testThrowParseException(){
+        std::ifstream in("test/resources/simple-withParseError.csv");
+        csv::iterator<ThreeMixedRecord> it(in);
+
+        CPPUNIT_ASSERT_THROW( *it, boost::bad_lexical_cast );
     }
 };
 
