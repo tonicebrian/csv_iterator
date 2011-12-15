@@ -8,7 +8,7 @@ dist/Debug/Makefile: CMakeLists.txt
 	mkdir -p dist/Debug; cd dist/Debug; cmake -DCMAKE_BUILD_TYPE=Debug ../..; 
 
 dist/Release/Makefile: CMakeLists.txt
-	mkdir -p dist/Release; cmake -DCMAKE_BUILD_TYPE=Release ../..
+	mkdir -p dist/Release; cd dist/Release; cmake -DCMAKE_BUILD_TYPE=Release ../..
 
 clean:
 	rm -rf dist
