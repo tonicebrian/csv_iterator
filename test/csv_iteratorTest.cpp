@@ -1,7 +1,6 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "csv_iterator.hpp"
 
-#include <vector>
 #include <string>
 #include <boost/tuple/tuple.hpp>
 #include <boost/tuple/tuple_comparison.hpp>
@@ -20,6 +19,7 @@ class csv_iteratorTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testReadIstream);
     CPPUNIT_TEST(testReadFile);
     CPPUNIT_TEST(testAlgorithms);
+    CPPUNIT_TEST(testThrowException);
     CPPUNIT_TEST_SUITE_END();
 
     typedef boost::tuple<int,int> TwoIntRecord;
@@ -41,7 +41,7 @@ class csv_iteratorTest : public CppUnit::TestFixture {
     void testDereference(){
         csv::iterator<TwoIntRecord> it;
         TwoIntRecord expected;
-        CPPUNIT_ASSERT_EQUAL(expected, *it);
+        CPPUNIT_ASSERT_THROW( *it , std::out_of_range );
     }
 
     void testCheckEqualityOfEmpties(){
@@ -162,6 +162,14 @@ class csv_iteratorTest : public CppUnit::TestFixture {
                         acc += a.get<2>(); 
                       });
         CPPUNIT_ASSERT_EQUAL(8.2,acc);
+    }
+
+    void testThrowException(){
+        std::ifstream in("test/resources/simple-error.csv");
+        csv::iterator<ThreeMixedRecord> it(in);
+        ++it;
+
+        CPPUNIT_ASSERT_THROW( *it, std::out_of_range );
     }
 };
 

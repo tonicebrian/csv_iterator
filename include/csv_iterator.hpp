@@ -3,6 +3,7 @@
 
 #include <string>
 #include <istream>
+#include <stdexcept>
 #include <boost/tuple/tuple.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/tokenizer.hpp>
@@ -33,15 +34,19 @@ namespace csv {
                     return &currentResult;
                 }
 
-                Tuple operator*() {
+                Tuple operator*() throw (boost::bad_lexical_cast,std::out_of_range) {
                     try {
                         using namespace boost;
                         typedef tokenizer<escaped_list_separator<char> > Tokens;
                         Tokens tokens(currentLine);
                         details::filler<Tuple>::fill(currentResult,tokens.begin(),tokens.end());
                     } catch (boost::bad_lexical_cast& ex){
-                        std::cout << ex.what() << std::endl;
                         m_bad = true;
+                        throw(ex);
+                    } catch (std::out_of_range& ex){
+                        // Execption when not enough columns in the record
+                        m_bad = true;
+                        throw(ex);
                     }
                     return currentResult;
                 }

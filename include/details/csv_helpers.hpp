@@ -11,6 +11,11 @@ namespace csv {
 
 
     namespace details {
+        void checkIteratorRange(strIt curr, strIt end) throw(std::out_of_range){
+            if(curr == end){
+                throw(std::out_of_range("Not enough parameter building the tuple"));
+            }
+        }
         // This namespace is private and subject to change
         // Do not use
         template<class Tuple, int N >
@@ -18,11 +23,10 @@ namespace csv {
                 static void fill(Tuple& tuple, strIt it, strIt end){
                     using namespace boost::tuples;
                     typedef typename element<length<Tuple>::value-N-1,Tuple>::type value_type;
+                    checkIteratorRange(it,end);
                     get<length<Tuple>::value-N-1>(tuple) = boost::lexical_cast<value_type>(*it);
                     ++it;
-                    if(it != end){
-                        helper<Tuple,N-1>::fill(tuple,it,end);
-                    }
+                    helper<Tuple,N-1>::fill(tuple,it,end);
                 }
             };
 
@@ -31,6 +35,7 @@ namespace csv {
                 static void fill(Tuple& tuple, strIt it, strIt end){
                     using namespace boost::tuples;
                     typedef typename boost::tuples::element<length<Tuple>::value-1,Tuple>::type value_type;
+                    checkIteratorRange(it,end);
                     boost::tuples::get<length<Tuple>::value-1>(tuple) = boost::lexical_cast<value_type>(*it);
                     ++it;
                 };
@@ -39,11 +44,11 @@ namespace csv {
         template<class Tuple>
             struct filler {
                 static void fill(Tuple& tuple, strIt it,strIt end){
-                    if(it != end){
-                        helper<Tuple, boost::tuples::length<Tuple>::value-1>::fill(tuple,it,end);
-                    }
+                    checkIteratorRange(it,end);
+                    helper<Tuple, boost::tuples::length<Tuple>::value-1>::fill(tuple,it,end);
                 }
             };
+
     }
 };
 
