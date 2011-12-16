@@ -1,1 +1,7 @@
 Fast iterator for traversing CSV files
+
+Libraries:
+    sudo apt-get install libboost-dev
+
+Optional libraries:
+    sudo apt-get install liboost-iostreams-dev

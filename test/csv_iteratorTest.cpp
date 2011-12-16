@@ -6,6 +6,10 @@
 #include <boost/tuple/tuple_comparison.hpp>
 #include <boost/tuple/tuple_io.hpp>
 
+// Compressed streams
+#include <boost/iostreams/filtering_stream.hpp>
+#include <boost/iostreams/filter/bzip2.hpp>
+
 class csv_iteratorTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(csv_iteratorTest);
     CPPUNIT_TEST(testDereference);
@@ -21,6 +25,7 @@ class csv_iteratorTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testAlgorithms);
     CPPUNIT_TEST(testThrowException);
     CPPUNIT_TEST(testThrowParseException);
+    CPPUNIT_TEST(testUseBzipStream);
     CPPUNIT_TEST_SUITE_END();
 
     typedef boost::tuple<int,int> TwoIntRecord;
@@ -178,6 +183,23 @@ class csv_iteratorTest : public CppUnit::TestFixture {
         csv::iterator<ThreeMixedRecord> it(in);
 
         CPPUNIT_ASSERT_THROW( *it, boost::bad_lexical_cast );
+    }
+
+    void testUseBzipStream(){
+        using namespace std;
+        ifstream file("test/resources/simple-bzip.csv.bz2", ios_base::in | ios_base::binary);
+        boost::iostreams::filtering_istream in;
+        in.push(boost::iostreams::bzip2_decompressor());
+        in.push(file);
+
+        csv::iterator<ThreeMixedRecord> it(in);
+
+        double acc = 0.0;
+        std::for_each(it,csv::iterator<ThreeMixedRecord>(),
+                      [&acc](const ThreeMixedRecord& a) {
+                        acc += a.get<2>(); 
+                      });
+        CPPUNIT_ASSERT_EQUAL(8.2,acc);
     }
 };
 
