@@ -26,6 +26,7 @@ class csv_iteratorTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testThrowException);
     CPPUNIT_TEST(testThrowParseException);
     CPPUNIT_TEST(testUseBzipStream);
+    CPPUNIT_TEST(testCurrentRowLazyness);
     CPPUNIT_TEST_SUITE_END();
 
     typedef boost::tuple<int,int> TwoIntRecord;
@@ -200,6 +201,19 @@ class csv_iteratorTest : public CppUnit::TestFixture {
                         acc += a.get<2>(); 
                       });
         CPPUNIT_ASSERT_EQUAL(8.2,acc);
+    }
+
+    void testCurrentRowLazyness(){
+        std::stringstream ss("1,hola,2.4");
+        csv::iterator<ThreeMixedRecord> it(ss);
+
+        ThreeMixedRecord expected;
+        boost::tuples::get<0>(expected) = 1;
+        boost::tuples::get<1>(expected) = "hola";
+        boost::tuples::get<2>(expected) = 2.4;
+        CPPUNIT_ASSERT_EQUAL(expected.get<0>(),it->get<0>());
+        CPPUNIT_ASSERT_EQUAL(expected.get<1>(),it->get<1>());
+        CPPUNIT_ASSERT_EQUAL(expected.get<2>(),it->get<2>());
     }
 };
 
