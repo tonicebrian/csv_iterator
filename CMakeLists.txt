@@ -9,6 +9,8 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 find_package(Boost COMPONENTS iostreams REQUIRED)
 
+add_executable(csvItExample src/main.cpp)
+
 # Testing
 find_package(CppUnit REQUIRED)
 add_executable(UnitTester test/main.cpp
