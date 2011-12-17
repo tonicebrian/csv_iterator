@@ -1,0 +1,8 @@
+#!/usr/bin/runhaskell
+-- Just intended for creating a increasing sequence of CSV values
+import System.Environment
+
+main = do
+    args <- getArgs
+    let records = zipWith (++) (map show[1..read (args!!0)]) (repeat ",hola,3.14")
+    mapM_ (putStrLn)  records
