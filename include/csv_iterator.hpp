@@ -53,6 +53,7 @@ namespace csv {
                             m_bad = true;
                             throw(ex);
                         }
+                        m_currentDirty = false;
                     }
                     
                     return currentResult;
