@@ -1,7 +1,15 @@
-Fast iterator for traversing CSV files
+csv_iterator
+============
 
-Usage:
-    Just include the 
+A fast iterator written in C++ for traversing CSV files
 
-Libraries:
-    sudo apt-get install libboost-dev liboost-iostreams-dev
+# Usage:
+
+Just copy the the files under the folder include in your include files
+
+# Testing
+In order to ensure that the libraries work for your platform type `make test`
+
+# Libraries:
+
+sudo apt-get install cmake libboost-dev liboost-iostreams-dev
