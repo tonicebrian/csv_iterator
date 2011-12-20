@@ -1,5 +1,5 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include "csv_iterator.hpp"
+#include <csv_iterator.hpp>
 
 #include <string>
 #include <boost/tuple/tuple.hpp>
