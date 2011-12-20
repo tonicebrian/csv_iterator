@@ -11,7 +11,7 @@ namespace csv {
 
 
     namespace details {
-        void checkIteratorRange(strIt curr, strIt end) throw(std::out_of_range){
+        void checkIteratorRange(const strIt& curr, const strIt& end) throw(std::out_of_range){
             if(curr == end){
                 throw(std::out_of_range("Not enough parameter building the tuple"));
             }
@@ -20,7 +20,7 @@ namespace csv {
         // Do not use
         template<class Tuple, int N >
             struct helper {
-                static void fill(Tuple& tuple, strIt it, strIt end){
+                static void fill(Tuple& tuple, strIt& it, strIt& end){
                     using namespace boost::tuples;
                     typedef typename element<length<Tuple>::value-N-1,Tuple>::type value_type;
                     checkIteratorRange(it,end);
@@ -32,7 +32,7 @@ namespace csv {
 
         template<class Tuple>
             struct helper<Tuple, 0> {
-                static void fill(Tuple& tuple, strIt it, strIt end){
+                static void fill(Tuple& tuple, strIt& it, strIt& end){
                     using namespace boost::tuples;
                     typedef typename boost::tuples::element<length<Tuple>::value-1,Tuple>::type value_type;
                     checkIteratorRange(it,end);
@@ -43,7 +43,7 @@ namespace csv {
 
         template<class Tuple>
             struct filler {
-                static void fill(Tuple& tuple, strIt it,strIt end){
+               static void fill(Tuple& tuple, strIt&& it,strIt&& end){
                     checkIteratorRange(it,end);
                     helper<Tuple, boost::tuples::length<Tuple>::value-1>::fill(tuple,it,end);
                 }

@@ -98,7 +98,9 @@ class csv_iteratorTest : public CppUnit::TestFixture {
         std::string line = "1,2,3";
         Tokens tokens(line);
 
-        csv::details::helper<ThreeIntRecord,2>::fill(obtained, tokens.begin(), tokens.end());
+        auto begin = tokens.begin();
+        auto end = tokens.end();
+        csv::details::helper<ThreeIntRecord,2>::fill(obtained, begin, end);
 
         boost::tuples::get<0>(expected) = 1;
         boost::tuples::get<1>(expected) = 2;
@@ -110,7 +112,9 @@ class csv_iteratorTest : public CppUnit::TestFixture {
         ThreeMixedRecord expected, obtained;
         std::string line = "1,hola,2.4";
         Tokens tokens(line);
-        csv::details::helper<ThreeMixedRecord,2>::fill(obtained, tokens.begin(), tokens.end());
+        auto begin = tokens.begin();
+        auto end = tokens.end();
+        csv::details::helper<ThreeMixedRecord,2>::fill(obtained, begin, end);
 
         boost::tuples::get<0>(expected) = 1;
         boost::tuples::get<1>(expected) = "hola";
