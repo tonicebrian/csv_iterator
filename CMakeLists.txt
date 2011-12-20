@@ -11,6 +11,8 @@ find_package(Boost COMPONENTS iostreams REQUIRED)
 
 add_executable(csvItExample src/main.cpp)
 
+target_link_libraries(csvItExample ${Boost_IOSTREAMS_LIBRARIES})
+
 # Testing
 find_package(CppUnit REQUIRED)
 add_executable(UnitTester test/main.cpp
