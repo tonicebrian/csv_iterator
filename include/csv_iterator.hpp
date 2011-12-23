@@ -1,4 +1,3 @@
-#ifndef _CSV_ITERATOR_HPP_
 #define _CSV_ITERATOR_HPP_
 
 #include <string>
@@ -49,13 +48,12 @@ namespace csv {
                             m_bad = true;
                             throw(ex);
                         } catch (std::out_of_range& ex){
-                            // Execption when not enough columns in the record
+                            // Exception when not enough columns in the record
                             m_bad = true;
                             throw(ex);
                         }
                         m_currentDirty = false;
                     }
-                    
                     return currentResult;
                 }
 
@@ -67,7 +65,6 @@ namespace csv {
                     return !(*this == other);
                 }
 
-                
                 iterator& operator++() {
                     bool res = std::getline(*m_in, currentLine);
                     m_bad = !res;
