@@ -24,7 +24,7 @@ namespace csv {
                     using namespace boost::tuples;
                     typedef typename element<length<Tuple>::value-N-1,Tuple>::type value_type;
                     checkIteratorRange(it,end);
-                    get<length<Tuple>::value-N-1>(tuple) = boost::lexical_cast<value_type>(*it);
+                    get<length<Tuple>::value-N-1>(tuple) = boost::lexical_cast<value_type>(it->c_str());
                     ++it;
                     helper<Tuple,N-1>::fill(tuple,it,end);
                 }
@@ -36,7 +36,7 @@ namespace csv {
                     using namespace boost::tuples;
                     typedef typename boost::tuples::element<length<Tuple>::value-1,Tuple>::type value_type;
                     checkIteratorRange(it,end);
-                    boost::tuples::get<length<Tuple>::value-1>(tuple) = boost::lexical_cast<value_type>(*it);
+                    boost::tuples::get<length<Tuple>::value-1>(tuple) = boost::lexical_cast<value_type>(it->c_str());
                     ++it;
                 };
             };

@@ -1,7 +1,7 @@
 csv_iterator
 ============
 
-A fast iterator written in C++ for traversing CSV files
+A flexible iterator library written in C++ for traversing CSV files
 
 Usage:
 ------
