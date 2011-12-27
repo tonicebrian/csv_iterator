@@ -15,6 +15,7 @@ The minimal example would be:
 
     #include <fstream>
     #include <boost/tuple/tuple.hpp>
+    #include <csv_iterator.hpp>
     
     using namespace boost::tuples;
     typedef tuple<int,std::string,double> record;
